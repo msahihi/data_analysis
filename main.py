@@ -1,35 +1,56 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from data_frame import DataFrame
-from util import Util
+
+from visualization import DataFrameVisulization
+from utils import StatisticUtil
 
 
+statistic_util = StatisticUtil()
+visualization = DataFrameVisulization()
 exp1 = DataFrame('data/dataset_1/benchmark/')
+file_filter = [
+    'cloudsuite_datacaching_95th.csv',
+    'cloudsuite_datacaching_avg_lat.csv',
+    'cloudsuite_datacaching_avgGetSize.csv',
+    'cloudsuite_datacaching_gets.csv',
+    'cloudsuite_datacaching_hits.csv',
+    'cloudsuite_datacaching_max.csv',
+    'cloudsuite_datacaching_min.csv',
+    'cloudsuite_datacaching_misses.csv',
+    'cloudsuite_datacaching_requests.csv',
+    'cloudsuite_datacaching_sets.csv',
+    'cloudsuite_datacaching_std.csv',
+    'cloudsuite_datacaching_rps.csv',
+
+]
+exp1.set_filter(file_filter)
 exp1.get_time_series()
-# exp1.visualize()
+options = {'kind': 'line', 'title': 'Experiment 1', }
+visualization.data_plot(exp1.data, **options)
 
 exp2 = DataFrame('data/dataset_2/benchmark/')
+# exp2.set_filter(file_filter)
 exp2.get_time_series()
-# exp2.visualize()
+# visualization.data_plot(exp2.data)
 
-util = Util()
+
 dpoints = np.array([
-    ['Group1', 'Category 1', exp1.data.Col1.mean()],
-    ['Group2', 'Category 1', exp2.data.Col1.mean()],
-    ['Group1', 'Category 2', util.percentile(exp1.data.Col1.values, 99)],
-    ['Group2', 'Category 2', util.percentile(exp1.data.Col1.values, 99)],
-    ['Group1', 'Category 3', exp1.data.Col1.min()],
-    ['Group2', 'Category 3', exp2.data.Col1.min()],
-    ['Group1', 'Category 4', exp1.data.Col1.max()],
-    ['Group2', 'Category 4', exp2.data.Col1.max()],
-    ['Group1', 'Category 5', exp1.data.Col1.var()],
-    ['Group2', 'Category 5', exp2.data.Col1.var()],
+    ['Normal', 'Mean', exp1.data.cloudsuite_datacaching_99th.mean()],
+    ['Packing', 'Mean', exp2.data.cloudsuite_datacaching_99th.mean()],
+    ['Normal', '99th Aggr ', statistic_util.percentile(exp1.data.cloudsuite_datacaching_99th.values, 99)],
+    ['Packing', '99th Aggr ', statistic_util.percentile(exp1.data.cloudsuite_datacaching_99th.values, 99)],
+    ['Normal', '99th Min', exp1.data.cloudsuite_datacaching_99th.min()],
+    ['Packing', '99th Min', exp2.data.cloudsuite_datacaching_99th.min()],
+    ['Normal', '99th Max', exp1.data.cloudsuite_datacaching_99th.max()],
+    ['Packing', '99th Max', exp2.data.cloudsuite_datacaching_99th.max()],
+    ['Normal', 'std', exp1.data.cloudsuite_datacaching_99th.std()],
+    ['Packing', 'std', exp2.data.cloudsuite_datacaching_99th.std()],
+    # ['Normal', 'Variance', exp1.data.gwdg_cloudsuite_datacaching_99th.var()],
+    # ['Packing', 'Variance', exp2.data.gwdg_cloudsuite_datacaching_99th.var()],
 ])
-util.bar_plot(221, dpoints, "1ts Comparision", y_label='Latency', x_label='Statistics parameters')
-# plt.show()
-util.bar_plot(222, dpoints, "2nd Comparision", y_label='Latency', x_label='Statistics parameters')
+visualization.comparision_plot(111, dpoints, "1ts Comparision", y_label='Latency', x_label='Statistics parameters')
+# util.bar_plot(222, dpoints, "2nd Comparision", y_label='Latency', x_label='Statistics parameters')
 # plt.savefig('plot/{}.png'.format("FILENAME"))
 plt.show()
-
-
 
