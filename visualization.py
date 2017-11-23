@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import operator as o
 import numpy as np
+import pandas as pd
 
 
 class DataFrameVisulization(object):
@@ -64,6 +65,22 @@ class DataFrameVisulization(object):
         handles, labels = ax.get_legend_handles_labels()
         ax.legend(handles[::-1], labels[::-1], loc='upper left')
 
+    def aggr_plot(self, data, y_label, x_label):
+
+        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(9, 6))
+        # fig.suptitle(title, fontsize=16)
+        xticklabels = [k for k in data.iterkeys()]
+        data = [v for v in data.itervalues()]
+        axes.boxplot(data, vert=True,   # vertical box aligmnent
+                        patch_artist=True)   # fill with color
+
+        # add x-tick labels
+        axes.set_ylim(0)
+        axes.set_xlabel(x_label)
+        axes.set_ylabel(y_label)
+        plt.setp(axes, xticks=[y + 1 for y in range(len(data))],
+                 xticklabels=xticklabels)
+
     def data_plot(self, data, **options):
         '''
         options refers to : http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.plot.html
@@ -71,4 +88,3 @@ class DataFrameVisulization(object):
 
         '''
         data.plot(**options)
-
