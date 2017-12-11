@@ -21,6 +21,7 @@ class Config(object):
         cfg = self.read_config_file()
         filter_list = cfg['filter_list']
         agg_filter = cfg['aggregation']
+        columns_list = cfg['columns_list']
         base_path = cfg['base_path']
         data = {}
         for group, values in cfg['experiment'].items():
@@ -30,7 +31,7 @@ class Config(object):
                 experimen_path = cfg['experiment'][group][experiment_name]['path']
                 data[group].update(
                     {experiment_name: DataFrame(base_path + experimen_path, filter_list)})
-                data[group][experiment_name].merge_data_into_timeseries()
+                data[group][experiment_name].merge_data_into_timeseries(columns_list)
         return data, agg_filter
 
 
@@ -53,11 +54,11 @@ class Aggregation(object):
             index.append(key)
         return index
 
-    def aggregate(self, data, method_name):
+    def aggregate(self, data, column_filter, method_name):
         index = self.get_index(data)
         df = pd.DataFrame(index=index)
         for key, data_frame in data.iteritems():
-            for column in data_frame.data.columns.values:
+            for column in column_filter:
                 method = getattr(data_frame.data[column], method_name)
                 df.set_value(key, column, method())
 
