@@ -1,0 +1,31 @@
+collection:
+  name: sample
+  base_path: data/
+  filter_list:
+    - cloudsuite_datacaching_99th.csv
+    - cloudsuite_datacaching_avg_lat.csv
+    - cloudsuite_datacaching_requests.csv
+  aggregation:
+    - cloudsuite_datacaching_99th
+    - cloudsuite_datacaching_requests
+    - cloudsuite_datacaching_avg_lat
+  experiment:
+    noop :
+      noop1:
+        path: dataset_1/benchmark/
+        options:
+          visualize: True
+      noop2:
+        path: dataset_2/benchmark/
+      noop3:
+        path: dataset_3/benchmark/
+    packing :
+      packing1:
+        path: dataset_4/benchmark/
+      packing2:
+        path: dataset_5/benchmark/
+      packing3:
+        path: dataset_6/benchmark/
+
+
+
